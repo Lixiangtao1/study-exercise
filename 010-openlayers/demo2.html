@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="./openlayers/ol.css" type="text/css">
+  <link rel="stylesheet" href="./openlayers/openlayers/index.css">
+  <script type="text/javascript" src="./openlayers/ol.js" charset="UTF-8"></script>
+  <style>
+    #overLay{
+      width: 100px;
+      height: 100px;
+      background: aquamarine;
+    }
+  </style>
+</head>
+<body>
+  <div style="width: 100%;height: 100%;">
+    <div id="map" style="width: 100%;height: 800px;"></div>
+    <div id="content">
+      <ul id="overLay">
+        <!-- <li onclick="mapZoomIn()">放大</li>
+        <li onclick="mapZoomOut()">缩小</li> -->
+        <!-- <li onclick="initialPoint()">设置初始地点</li> -->
+      </ul>
+    </div>
+    
+  </div>
+  
+  <script>
+    /* 地图配置信息 */
+    let mapBase = {
+        projection: ol.proj.get('EPSG:4326'),
+        // center: (locationCenter ? locationCenter : [118.79474016666667, 32.042204166666664]),
+        center: ([118.79474016666667, 32.042204166666664]),
+        zoom: 10,
+        minZoom: 4,
+        maxZoom: 18
+    }
+    let resolutions =[1.40625, 0.703125, 0.3515625, 0.17578125, 0.087890625, 0.0439453125, 0.02197265625, 0.010986328125, 0.0054931640625, 0.00274658203125, 0.001373291015625, 0.0006866455078125, 0.00034332275390625, 0.000171661376953125, 0.0000858306884765625, 0.00004291534423828125, 0.000021457672119140625, 0.000010728836059570312, 0.000005364418029785156, 0.000002682209014892578, 0.000001341104507446289];
+    let matrixIds = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
+    let projectionExtent = mapBase.projection.getExtent();
+    // 创建一个地图
+    var map = new ol.Map({
+      loadTilesWhileAnimating: true,
+        controls: ol.control.defaults({
+            attribution: false,
+            rotate: false,
+            zoom: false
+        }).extend([
+            new ol.control.ScaleLine({units: "metric"}),   //ol.control.ScaleLine比例尺控件
+            new ol.control.ZoomSlider()  //ol.control.ZoomSlider缩放刻度控件
+        ]),
+        target: "map",
+        layers: [
+          new ol.layer.Tile({//创建图层
+            source: new ol.source.WMTS({
+              name: "basemap",
+              url: 'http://t0.tianditu.gov.cn/vec_c/wmts?tk=66f44cac9369e1332bdd08895a4c9469',
+              layer: "vec",
+              style: "default",
+              matrixSet: "c",
+              format: "tiles",
+              wrapX: true,
+              tileGrid: new ol.tilegrid.WMTS({
+                extent: projectionExtent,
+                resolutions: resolutions.slice(0, 21),
+                matrixIds: matrixIds.slice(0, 21)
+              })
+            }),
+            zIndex: 0,
+            maxResolution: resolutions[0],
+            minResolution: resolutions[20]
+          }),
+          new ol.layer.Tile({/* 天地图-图层标记 */
+            source: new ol.source.WMTS({
+              name: "basecvamap",
+              url: "http://t0.tianditu.gov.cn/cva_c/wmts?tk=66f44cac9369e1332bdd08895a4c9469", // 在线地图
+              layer: "cva",
+              style: "default",
+              matrixSet: "c",
+              format: "tiles",
+              wrapX: true,
+              tileGrid: new ol.tilegrid.WMTS({
+                extent: projectionExtent,
+                resolutions: resolutions.slice(0, 21),
+                matrixIds: matrixIds.slice(0, 21)
+              })
+            }),
+            zIndex: 1,
+            maxResolution: resolutions[0],
+            minResolution: resolutions[20]
+          })
+        ],
+        view: new ol.View(mapBase),
+    })
+    // 创建一个overlay
+    let overLay = new ol.Overlay( ({
+      element: document.getElementById('overLay'),//设置弹框容器
+      offset: [0, 0]
+    }))
+
+    let showDialog = false
+    // 监听地图的点击事件
+    map.on('contextmenu', function(evt){
+      console.log(evt)
+      // 获取当前点击坐标, 并设置到HTMl元素上去
+      evt.preventDefault();
+      let x = evt.coordinate[0];
+      let y = evt.coordinate[1];
+      let coordinate = [x, y];
+      // 设置overlay的位置，从而显示在鼠标点击处
+      overLay.setPosition(coordinate);//对应点位设置弹出层
+      map.addOverlay(overLay)
+      showDialog = true
+    })
+
+    // 左键单击取消弹框事件
+    map.on('singleclick', function (evt){
+      console.log(evt)
+      overLay.setPosition();//设置叠加层的位置，如果位置是undefined则会覆盖被隐藏
+    })
+  </script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function Person(age){
+      console.log(this)
+      this.age = age
+      console.log(Person.prototype)
+    }
+    var father = new Person()
+
+
+    // 构造函数 使用new操作符调用时,有四步骤、
+    // 1. 创建一个新的对象
+    // 2. 将this指向
+
+    function test() {
+      console.log(this)
+    }
+    test()
+  </script>
+</body>
+</html>

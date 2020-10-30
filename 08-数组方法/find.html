@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // find方法返回数组中满足提供的测试函数的第一个元素的值  否则返回undefined
+    let arr = [
+      {
+        name:'hhh',
+        age:'18'
+      },
+      {
+        name:'hhh1',
+        age:'17'
+      },
+      {
+        name:'hhh2',
+        age:'19'
+      },
+    ]
+    let temp = arr.find( item => {
+      if (item.age > '17') {
+        return item
+      }
+    })
+    console.log(temp)
+  </script>
+</body>
+</html>

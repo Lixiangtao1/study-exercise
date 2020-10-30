@@ -1,0 +1,10 @@
+1.正常的http协议只能由客户端向服务端发送请求,（http协议的缺点: 只能由客户端向服务端发起）
+    --如果服务器有连续的状态变化,客户端需要发起轮询(每隔一段时间就发起一次询问)
+2. 由于http协议的弊端,因此诞生了websocket
+
+
+3.创建字符串的方法
+     1.let str = 'hahah'
+     2.还有另外一种原始的方法： 
+      const str = new Object('hahah')
+      console.log(typeof str, 'str')

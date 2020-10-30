@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="./workshop-resources/ol3/ol.css" type="text/css">
+  <script type="text/javascript" src="./workshop-resources/ol3/ol.js" charset="UTF-8"></script>
+</head>
+<body>
+  <div id="map" style="width: 100%;"></div>
+  <button onClick="moveDown()">向下移动</button>
+  <button onClick="showChengdu()">移动到成都</button>
+  <script>
+    // 创建一个地图demo
+    var map = new ol.Map({
+      controls: ol.control.defaults({
+        attributionOptions: ({
+          collapsible: false
+        })
+      }),
+      logo: false,
+      // logo: './404.png',
+      // logo: {
+      //   src:'./404.png',
+      //   href: 'http://www.openstreetmap.org/'
+      // },
+      // 设置地图层
+      layers: [
+        // 创建一个使用Open Street Map地图源的瓦片图层
+        new ol.layer.Tile({ source: new ol.source.OSM() })
+      ],
+
+      // 设置显示地图的视图
+      view: new ol.View({
+        center: [0, 0],  // 地图显示中心(经纬度)
+        zoom: 8     //地图显示层级
+      }),
+      target: 'map' //map的div  地图的容器
+    })
+
+    // 向下移动
+    function moveDown() {
+      var view = map.getView();
+      var mapCenter = view.getCenter();
+      // 让地图中心的Y值增加,可让地图向下移动
+      mapCenter[1] += 50000;
+      view.setCenter(mapCenter);
+      map.render();
+    }
+
+    // 移动到成都
+    function showChengdu() {
+      var view = map.getView()
+      view.setCenter(ol.proj.transform([104.06,30.67], 'EPSG:4326', 'EPSG:3857'))
+      map.render()
+    }
+
+  </script>
+</body>
+</html>
+
+<!-- ol.Map 是最主要的地图类 -->
+<!-- 
+  openLayers 3组成部分：
+  1.地图（Map） ol.Map类
+  2.视图（view） ol.View类
+ -->

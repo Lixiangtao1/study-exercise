@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .box::before{
+      content: '';
+      color: aquamarine;
+      border-left: 1px solid red;
+    }
+    .box:after{
+      content: '';
+      color: chartreuse;
+      border-right: 1px solid green;
+      padding-left: 20px;
+    }
+  </style>
+</head>
+<body>
+  <!-- before和after的作用就是在制定的元素内容之前或者之后
+    插入一个包含content属性指定内容的行内元素 -->
+    <div class="box">
+      hello,beofre/after
+    </div>
+</body>
+</html>
