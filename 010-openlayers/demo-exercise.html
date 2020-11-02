@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="./openlayers/ol.css" type="text/css">
+  <link rel="stylesheet" href="./openlayers/openlayers/index.css">
+  <script type="text/javascript" src="./openlayers/ol.js" charset="UTF-8"></script>
+</head>
+<body>
+  <div id="map"></div>
+
+  <script>
+    var map = new ol.Map({
+      layer:[],
+      view: new ol.View({
+        projection: "EPSG: 3857", //投影设置
+        center: ol.proj.transform([106, 36]), //视图的初始中心
+      }),
+      target: 'map'
+    })
+  </script>
+</body>
+</html>
