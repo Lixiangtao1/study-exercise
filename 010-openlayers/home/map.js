@@ -191,6 +191,7 @@ function mapZoomOut () {
 }
 /* 设置初始地点 */
 function initialPoint () {
+    console.log('设置初始地点-------')
     // 赋值地图中心点
     mapBase.center = initialPointLocation;
     // 点位存储至缓存

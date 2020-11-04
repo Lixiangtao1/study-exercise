@@ -23,13 +23,43 @@
         <!-- <p onclick="mapZoomBig(10)">放大</p> -->
         <p onclick="mapZoomOut()">缩小</p>
         <!-- <li onclick="initialPoint()">设置初始地点</li> -->
-      </div>
-    <!-- </div> -->
-    
+      </ul>
+    </div>
+
+    <div style="text-align: center;padding-top: 20px;">
+      <input type="button" value="close" onclick="clickRemoveDraw()" style="width: 100px;" />
+      <input type="button" value="point" onclick="clickBtn('point')" style="width: 100px;" />
+      <input type="button" value="circle" onclick="clickBtn('circle')" style="width: 100px;" />
+      <input type="button" value="line" onclick="clickBtn('line')" style="width: 100px;" />
+      <input type="button" value="draw" onclick="clickBtn('draw')" style="width: 100px;" />
+      <input type="button" value="dimetric" onclick="clickBtn('dimetric')" style="width: 100px;" />
+    </div>
   </div>
+
   
   <script>
-    /* 地图配置信息 */
+    let layerObj = {};
+    let sourceObj = {};
+    let mapDom = null;
+    let clickDraw = null;
+    let Draw = ol.interaction.Draw;
+    let drawCreateBox = ol.interaction.Draw.createBox;
+    let ModifyFeature = ol.interaction.Modify;
+    let VectorSource = ol.source.Vector;
+    let Cluster = ol.source.Cluster;
+    let VectorLayer = ol.layer.Vector;
+    let Feature = ol.Feature;
+    let Point = ol.geom.Point;
+    let Polygon = ol.geom.Polygon;
+    let transform = ol.proj.transform;
+    let Style = ol.style.Style;
+    let Icon = ol.style.Icon;
+    let Fill = ol.style.Fill;
+    let Stroke = ol.style.Stroke;
+    let Overlay = ol.Overlay;
+    let get = ol.proj.get;
+    let initialPointLocation = []; // 记录初始点经纬度
+        /* 地图配置信息 */
     let mapBase = {
         projection: ol.proj.get('EPSG:4326'),
         // center: (locationCenter ? locationCenter : [118.79474016666667, 32.042204166666664]),
@@ -49,6 +79,10 @@
             rotate: false,
             zoom: false
         }).extend([
+            // graphViewControl,// 自定义拓扑控件
+            new ol.control.OverviewMap(),// 地图全局视图控件
+            new ol.control.ZoomToExtent(),// 缩放到全局控件
+
             new ol.control.ScaleLine({units: "metric"}),   //ol.control.ScaleLine比例尺控件
             new ol.control.ZoomSlider()  //ol.control.ZoomSlider缩放刻度控件
         ]),
@@ -120,6 +154,167 @@
     map.on('singleclick', function (evt){
       console.log(evt)
       overLay.setPosition();//设置叠加层的位置，如果位置是undefined则会覆盖被隐藏
+    })
+
+
+    let isUserAddPoint = false  //是否设置了点位
+    /* 存储绘制的图形 */
+    let modifyList = [];
+    /* 存储到新创建的数组 */
+    let clickLayerList = [];
+    let isCancelModify = true //是否取消监听Modify
+    //点击事件
+    function clickBtn(clickType){
+      console.log(clickType)
+      if (isCancelModify) setMaskingLayer(false);
+      map.removeInteraction(clickDraw);
+      addInteraction(clickType)
+    }
+
+    // 创建图形
+    function addInteraction(value){
+      console.log(value, '--value')//创建图形的类型
+      var typeValue = ''
+      if (value) {
+        let geometryFunction;
+        let typeValue = '';
+        if (value == 'point') { /* 点 */
+            typeValue = 'Point'
+            userClickPoint();
+            return  false;
+        } else if (value == 'dimetric') { /* 矩形 */
+            typeValue = 'Circle';
+            geometryFunction = drawCreateBox();
+        } else if (value == 'draw') { /* 多边形 */
+            typeValue = "Polygon";
+        } else if (value == 'circle') { /* 圆 */
+            typeValue = 'Circle';
+        } else if (value == 'line') { /* 路线 */
+            typeValue = 'LineString'
+        } else {
+            return false;
+        }
+        /* 如果点击过设置点位则恢复初始化 */
+        if (isUserAddPoint) {
+            isUserAddPoint = false;
+            document.getElementById('map').css('cursor', 'auto')
+            // $("#user-map").css('cursor', 'auto');
+        }
+        let source = new VectorSource({wrapX: false});
+        let fillColor = [71, 137, 227, 0.5]; // 填充颜色
+        let borderColor = '#c5ffe7'; // 边框颜色
+        let seriousLayerVector = new VectorLayer({ source: source, style: [new Style({ fill: new Fill({ color: fillColor }), stroke: new Stroke({color: borderColor, width: 2 }) })], zIndex: 4 });
+        /* 创建layer */
+        let modify = new ModifyFeature({ source: seriousLayerVector.getSource() });
+        modifyList.push(modify);
+        map.addInteraction(modify);
+
+        /* 存储到新创建的数组 */
+        clickLayerList.push({layer: seriousLayerVector,level: value});
+        /* 添加到地图 */
+        map.addLayer(seriousLayerVector);
+        /* 创建Draw */
+        clickDraw = new Draw({
+          stopClick: true,
+          type: typeValue,
+          source: seriousLayerVector.getSource(),
+          geometryFunction: geometryFunction
+        });
+        map.addInteraction(clickDraw);
+        /* 绘制完成 */
+        clickDraw.on("drawend", function(e) {
+            let feat = e.feature;
+            let geometry = feat.getGeometry();
+            let coords = [];
+            let radius = 0; // 绘制圆形时的半径
+            if (value == 'circle') {
+                let PointObj = setPointList(value, geometry);
+                coords = PointObj.center;
+                radius = PointObj.radius;
+            } else {
+                coords = setPointList(value, geometry);
+            }
+            console.log('绘制完成', coords, (value == 'circle' ? ('半径是：' + radius) : ''))
+        });
+        /* 修改结束后 */
+        modify.on("modifyend", function(evt) {
+            const geometry = evt.features.item(0).getGeometry();
+            let coords = [];
+            let radius = 0; // 绘制圆形时的半径
+            if (value == 'circle') {
+                let PointObj = setPointList(value, geometry);
+                coords = PointObj.center;
+                radius = PointObj.radius;
+            } else {
+                coords = setPointList(value, geometry);
+            }
+            console.log('修改完成', coords, (value == 'circle' ? ('半径是：' + radius) : ''))
+        })
+      }
+    }
+
+    /* 处理图形绘制、调整后的点位 */
+    function setPointList (value, geometry) {
+        let coords = []; // 点位数据
+        if (value == 'draw' || value == 'dimetric') { // 多边形点位或者矩形点位
+            coords = geometry.getCoordinates()[0];
+            console.log((value == 'draw' ? '多边形' : '矩形'));
+        } else if (value == 'line') { // 线点位
+            coords = geometry.getCoordinates();
+            console.log('线条：');
+        } else if (value == 'circle') { // 圆圈
+            coords = geometry.getCenter(); // 中心点
+            let radius = geometry.getRadius(); // 绘制圆形时的半径
+            console.log('圈圈：');
+            return {
+                center: coords,
+                radius: radius
+            }
+        } else { // 点
+            coords = geometry.getCoordinates();
+        }
+        return coords;
+    }
+
+    function userClickPoint () {
+      isUserAddPoint = true;
+      // $("#user-map").css('cursor', 'crosshair');
+    }
+
+    /* 取消样式调整事件 */
+    function setMaskingLayer (falg) {
+        console.log(modifyList)
+        debugger
+        isCancelModify = falg;
+        if (falg) {
+            /* 取消modify监听事件 */
+            try {
+                for (let i in modifyList) {
+                    modifyList[i].setActive(false);
+                }
+                console.log('删除')
+            } catch (error) {}
+        } else {
+            /* 添加modify监听事件 */
+            try {
+                for (let i in modifyList) {
+                    modifyList[i].setActive(true);
+                }
+                console.log('添加')
+            } catch (error) {}
+        }
+    }
+    /* 删除图形 */
+    function clickRemoveDraw () {
+      /* 如果点击过设置点位则恢复初始化 */
+      if (isUserAddPoint) {
+          isUserAddPoint = false;
+          document.getElementById('map').css('cursor', 'auto');
+      }
+      /* 删除编辑状态 */
+      map.removeInteraction(clickDraw);
+      if (!isCancelModify) setMaskingLayer(true);
+    }
     }),
 
     // 弹窗内容点击事件
