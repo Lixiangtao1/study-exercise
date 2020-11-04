@@ -29,6 +29,17 @@
   </div>
   
   <script>
+    // // 自定义控件
+    // // 获取GraphView对象
+    // GraphViewControl.prototype.getGraphView = function() { return this._graphView; };
+    // var graphView = this._graphView = new ht.graph.GraphView();// 拓扑图组件
+    
+    // var view = graphView.getView();// 获取拓扑组件的 div
+    // ol.control.Control.call(this, {
+    //   element: view,// 控件的容器元素
+    //   target: options.target// 将控件渲染到地图的视口之外
+    // });
+
     /* 地图配置信息 */
     let mapBase = {
         projection: ol.proj.get('EPSG:4326'),
@@ -49,6 +60,10 @@
             rotate: false,
             zoom: false
         }).extend([
+            // graphViewControl,// 自定义拓扑控件
+            new ol.control.OverviewMap(),// 地图全局视图控件
+            new ol.control.ZoomToExtent(),// 缩放到全局控件
+
             new ol.control.ScaleLine({units: "metric"}),   //ol.control.ScaleLine比例尺控件
             new ol.control.ZoomSlider()  //ol.control.ZoomSlider缩放刻度控件
         ]),

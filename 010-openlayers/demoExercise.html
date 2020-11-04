@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="./workshop-resources/ol3/ol.css" type="text/css">
+  <script type="text/javascript" src="./workshop-resources/ol3/ol.js" charset="UTF-8"></script>
+</head>
+<body>
+  <div id="map" style="width: 800px;height: 800px;"></div>
+
+  <script>
+    var map = new ol.Map({
+      // controls: ol.control.defaults().extend({
+        // graphViewControl, //自定义拓扑控件
+      // }),
+      layer:[
+        // new ol.layer.Tile({
+        //   source: new ol.source.XYZ({
+        //     url: "http://t0.tianditu.gov.cn/cva_c/wmts?tk=66f44cac9369e1332bdd08895a4c9469"
+        //   })
+        // })
+        new ol.layer.Tile({ source: new ol.source.OSM() })
+      ],
+      view: new ol.View({//地图的视图窗口
+        // projection: "EPSG: 3857", //投影设置
+        // center: ol.proj.transform([106, 36]), //视图的初始中心
+        center:[0,0],
+        zoom: 8  //缩放的级别
+      }),
+      target: 'map'
+    })
+  </script>
+</body>
+</html>

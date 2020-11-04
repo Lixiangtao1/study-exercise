@@ -123,6 +123,8 @@ function clickRemoveDraw () {
 }
 /* 取消样式调整事件 */
 function setMaskingLayer (falg) {
+    console.log(modifyList)
+    debugger
     isCancelModify = falg;
     if (falg) {
         /* 取消modify监听事件 */
