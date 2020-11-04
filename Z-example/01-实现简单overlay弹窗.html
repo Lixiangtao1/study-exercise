@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>实现一个简单的弹窗</title>
+  <link rel="stylesheet" href="./../010-openlayers/workshop-resources/ol3/ol.css" type="text/css">
+  <script type="text/javascript" src="./../010-openlayers/workshop-resources/ol3/ol.js" charset="UTF-8"></script>
+</head>
+<body>
+  <!-- 地图容器 -->
+  <div id="map" style="width: 100%;height: 100%;"></div>
+  <!-- overlay容器 -->
+  <div id="dialog_overlay">
+    <div id="text" style="background: red;width: 100px;"></div>
+  </div>
+
+  <div id="marker" style="background: skyblue;">南京</div>
+  <script>
+    var dialog_overlayer = document.getElementById('dialog_overlay')
+    var text = document.getElementById('text')
+    var map = new ol.Map({
+      layers:[
+        new ol.layer.Tile({ source: new ol.source.OSM() }) 
+      ],
+
+      view: new ol.View({
+        // extent: [102, 29, 104, 31],
+        center: ol.proj.transform([104, 30], 'EPSG:4326', 'EPSG:3857'),
+        zoom: 4
+      }),
+      target: 'map'
+    })
+
+    let overlay = new ol.Overlay({
+      element: dialog_overlayer,
+      autoPan: true,
+      autoPanAnimation: {
+        duration: 250
+      }
+    })
+
+    // 对固定的点添加标记
+    var nanJing = ol.proj.fromLonLat([118.78,32.04])
+    var marker = new ol.Overlay({
+      position: nanJing,
+      positioning: "center-center",
+      element: document.getElementById("marker"),
+      stopEvent: false
+    })
+
+    map.addOverlay(marker)
+
+
+    map.on('singleclick', function (evt) {
+      console.log(evt)
+      let zoom = map.getView().getZoom() //获取当前地图层级
+      console.log(zoom)
+      const coordinate = evt.coordinate
+      console.log(coordinate)
+      const hdms = ol.coordinate.toStringHDMS(ol.proj.toLonLat(coordinate))
+      text.innerHTML = "<p>点击的经纬度为：" + hdms + "</p>"
+      overlay.setPosition(coordinate)
+      map.addOverlay(overlay)//将overlay实例添加到地图时对象上
+    })
+  </script>
+</body>
+</html>
