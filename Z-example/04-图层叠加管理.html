@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>图层叠加</title>
+  <link rel="stylesheet" href="./../010-openlayers/workshop-resources/ol3/ol.css" type="text/css">
+  <script type="text/javascript" src="./../010-openlayers/workshop-resources/ol3/ol.js" charset="UTF-8"></script>
+  <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+  <div id="map" style="width: 100%;height: 100%;"></div>
+
+  <div>
+    显示隐藏：
+    <input type="checkbox" checked="checked" onclick="checkOsm(this)" />底图
+    <input type="checkbox" checked="checked" onclick="checkCircle(this)" />圆
+    <input type="checkbox" checked="checked" onclick="checkPoint(this)" />点
+  </div>
+  <!-- <div>
+    图层顺序：
+    <input name="seq" type="radio" value="" onclick="upOsm(this)" />底图最上
+    <input name="seq" type="radio" value="" checked="checked" onclick="upCircle(this)" />圆最上
+    <input name="seq" type="radio" value="" onclick="upPoint(this)" />点最上
+  </div> -->
+
+  <script>
+    // 创建三个图层
+    var osm = new ol.layer.Tile({
+      source: new ol.source.OSM()
+    })
+    var circleLayer = new ol.layer.Vector({
+      source: new ol.source.Vector()
+    })
+    var pointLayer = new ol.layer.Vector({
+      source: new ol.source.Vector()
+    })
+
+    new ol.Map({
+      layers: [osm, circleLayer, pointLayer,
+
+        // 添加一个显示Open Street Map地图瓦片网格的图层
+        new ol.layer.Tile({
+          source: new ol.source.TileDebug({
+            projection: 'EPSG:3857',
+            tileGrid: new ol.source.OSM().getTileGrid()//添加网格图层
+          })
+        })
+      ],
+      view: new ol.View({
+        center: [0, 0],
+        zoom: 4
+      }),
+      target: 'map'
+    })
+
+    // 添加点
+    var point = new ol.Feature({
+      geometry: new ol.geom.Point([0,0])
+    });
+    point.setStyle(new ol.style.Style({
+      image: new ol.style.Circle({
+        radius: 1,
+        fill: new ol.style.Fill({
+          color:'red'
+        }),
+        stroke: new ol.style.Stroke({
+          color: 'red',
+          size: 1
+        })
+      })
+    }))
+    pointLayer.getSource().addFeature(point);
+
+    // 添加圆
+    var circle = new ol.Feature({
+      geometry: new ol.geom.Point([0,0])
+    })
+    circle.setStyle(new ol.style.Style({
+      image:new ol.style.Circle({
+        radius: 15,
+        stroke: new ol.style.Stroke({
+          color: 'blue',
+          size: 1
+        })
+      })
+    }))
+    circleLayer.getSource().addFeature(circle)
+
+    // 隐藏显示osm图层
+    function checkOsm(elem){
+      console.log(elem.checked)//false true
+      osm.setVisible(elem.checked)
+    }
+    // 切换显示圆
+    function checkCircle(elem){
+      circleLayer.setVisible(elem.checked)
+    }
+    // 切换显示点
+    function checkPoint(elem){
+      pointLayer.setVisible(elem.checked)
+    }
+
+    // // 置顶OSM图层到最上面
+    // function upOsm(elem){
+    //   if(elem.checked){
+    //     osm.setZIndex(3); //设置图层的Z轴值
+    //     debugger
+    //     circleLayer.setZindex(circleLayer.getZIndex() - 1);
+    //     pointLayer.setZindex(pointLayer.getZIndex() - 1);
+    //   }
+    // }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>分辨率</title>
+  <link rel="stylesheet" href="./../010-openlayers/workshop-resources/ol3/ol.css" type="text/css">
+  <script type="text/javascript" src="./../010-openlayers/workshop-resources/ol3/ol.js" charset="UTF-8"></script>
+  <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+  <div id="map" style="width: 100%;height: 100%;"></div>
+  <div>
+    当前层级<span id="zoom"></span> 当前分辨率：<span id="resolution"></span>
+  </div>
+  <script>
+    var map = new ol.Map({
+      layers: [
+        new ol.layer.Tile({
+          source: new ol.source.OSM()
+        })
+      ],
+      view: new ol.View({
+        center: ol.proj.fromLonLat([104, 30]),
+        zoom: 4
+      }),
+      target: 'map'
+    })
+    //监听层级变化, 输出当前层级和分辨率
+    map.getView().on('change:resolution', function(){
+      document.getElementById('zoom').innerHTML = map.getView().getZoom() + ','
+      document.getElementById('resolution').innerHTML = map.getView().getResolution()
+    })
+
+    document.getElementById('zoom').innerHTML = map.getView().getZoom() + ','
+    document.getElementById('resolution').innerHTML = map.getView().getResolution() + ','
+  </script>
+</body>
+</html>

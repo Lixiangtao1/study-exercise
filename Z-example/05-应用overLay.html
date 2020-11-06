@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="./../010-openlayers/workshop-resources/ol3/ol.css" type="text/css">
+  <script type="text/javascript" src="./../010-openlayers/workshop-resources/ol3/ol.js" charset="UTF-8"></script>
+  <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+  <div id="map" style="width: 100%;height: 100%;"></div>
+
+  <!-- 设置一个图标显示 -->
+  <div id="icon" style="cursor: pointer;">
+    <img src="./images/logo.png" alt="">
+  </div>
+
+  <script>
+    var map = new ol.Map({
+      layers: [
+        new ol.layer.Tile({
+          source: new ol.source.OSM()
+        })
+      ],
+      view: new ol.View({
+        // center: [118.78,32.04],
+        center: ol.proj.fromLonLat([118.78,32.04]), //ol.proj.fromLonLat是将一个经纬度坐标转换成当前地图投影的坐标
+        projection: 'EPSG:3857', //默认EPSG:3857
+        zoom: 10,
+        minZoom: 8,
+        maxZoom: 12
+      }),
+      target:'map'
+    })
+
+    // 创建一个overlay
+    let icon = new ol.Overlay({
+      element: document.getElementById('icon')
+    })
+    icon.setPosition(ol.proj.fromLonLat([118.78,32.04]))//将图标设置在地图上的位置
+    map.addOverlay(icon)//将Overlay添加到地图上
+  </script>
+</body>
+</html>

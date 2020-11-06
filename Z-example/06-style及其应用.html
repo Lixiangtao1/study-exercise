@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="./../010-openlayers/workshop-resources/ol3/ol.css" type="text/css">
+  <script type="text/javascript" src="./../010-openlayers/workshop-resources/ol3/ol.js" charset="UTF-8"></script>
+  <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+  <div id="map" style="width: 100%;height: 100%;"></div>
+  <script>
+    // 我们需要一个vector的layer来放置图标
+    var layer = new ol.layer.Vector({
+      source: new ol.source.Vector()
+    })
+    var map = new ol.Map({
+      layers: [
+        new ol.layer.Tile({
+          source: new ol.source.OMS()
+        }),
+        layer
+      ],
+      view: new ol.View({
+        center: ol.proj.fromLonLat([108,32]),
+        projection: 'EPSG: 3857',
+        zoom: 8,
+        minZoom: 4,
+        maxZoom: 12
+      }),
+      target: 'map'
+    })
+    // 创建一个Feature,并设置好在地图上
+    var icon = new ol.Feature({
+      geometry: new ol.geom.Point([104,30])
+    });
+    // 设置样式,在样式中就可以设置图标
+    icon.setStyle(new ol.style.Style({
+      image: new ol.style.Icon({
+        src: './images/logo.png'
+      })
+    }))
+    // 添加到之前的创建的layer中
+    layer.getSource().addFeature(icon)
+
+  </script>
+</body>
+</html>

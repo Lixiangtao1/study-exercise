@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>实现一个矢量地图</title>
+  <link rel="stylesheet" href="./../010-openlayers/workshop-resources/ol3/ol.css" type="text/css">
+  <script type="text/javascript" src="./../010-openlayers/workshop-resources/ol3/ol.js" charset="UTF-8"></script>
+</head>
+<body>
+  <div id="map" style="width: 100%;height: 100%;"></div>
+
+  <div>矢量地图Feature总数： <span id="count"></span></div>
+  <script>
+    var map = new ol.Map({
+      layers: [
+        new ol.layer.Tile({
+          source: new ol.source.OSM()
+        })
+      ],
+
+      view: new ol.View({
+        center: ol.proj.fromLonLat([108, 32]),
+        zoom: 4,
+        // projection: 'EPSG: 4326'
+      }),
+
+      target:'map'
+    })
+
+    var vectorLayer = new ol.layer.Vector({
+      source: new ol.source.Vector({
+        url: 'https://geo.datav.aliyun.com/areas/bound/geojson?code=100000_full', //全国（包含子区域）
+        // url: 'https://geo.datav.aliyun.com/areas/bound/geojson?code=100000', //全国
+        format: new ol.format.GeoJSON()
+      }),
+      // 设置样式，颜色为红色，线条粗细为1个像素
+      style: new ol.style.Style({
+        stroke: new ol.style.Stroke({
+            color: 'blue',
+            size: 1
+        })
+      })
+    });
+    // 因为是异步加载，所以要采用事件监听的方式来判定是否加载完成
+    var listenerKey = vectorLayer.getSource().on('change', function(){
+      if (vectorLayer.getSource().getState() === 'ready') {    // 判定是否加载完成
+        document.getElementById('count').innerHTML = vectorLayer.getSource().getFeatures().length;
+        vectorLayer.getSource().unByKey(listenerKey); // 注销监听器
+      }
+    });
+
+    map.addLayer(vectorLayer);
+    // 如果在此处调用vectorLayer.getSource().getFeatures()是完全有可能获取不到任何Feature的，这是常犯错误
+  </script>
+</body>
+</html>

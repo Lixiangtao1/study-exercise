@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>矢量地图的坐标转换</title>
+  <link rel="stylesheet" href="./../010-openlayers/workshop-resources/ol3/ol.css" type="text/css">
+  <script type="text/javascript" src="./../010-openlayers/workshop-resources/ol3/ol.js" charset="UTF-8"></script>
+  <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+  <div id="map" style="width: 100%;height: 100%;"></div>
+
+  <script>
+    var map = new ol.Map({
+      layers: [
+        new ol.layer.Tile({
+          source: new ol.source.OSM()
+        })
+      ],
+
+      view: new ol.View({
+        center: ol.proj.fromLonLat([108, 32]),
+        zoom: 4,
+        // position: 'EPSG: 3857'
+      }),
+
+      target: 'map'
+    })
+
+    // 加载矢量地图
+    function addGeoJSON(src){
+      var layer = new ol.layer.Vector({
+        source: new ol.source.Vector({
+          features: (new ol.format.GeoJSON()).readFeatures(src, {
+            dataProjection: 'EPSG: 4326', //设定json数据使用的坐标系
+            featureProjection: 'EPSG: 3857'//设定当前地图使用的feature的坐标系
+          })
+        })
+      })
+      console.log(layer)
+      debugger
+      map.addLayer(layer)
+    }
+
+    // 使用ajax
+    $.ajax({
+      url: 'https://geo.datav.aliyun.com/areas/bound/geojson?code=100000_full',
+      success: function(data, status) {
+        console.log(data)
+        addGeoJSON(data)
+      }
+    })
+  </script>
+</body>
+</html>
