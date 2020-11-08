@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="./../010-openlayers/workshop-resources/ol3/ol.css" type="text/css">
+  <script type="text/javascript" src="./../010-openlayers/workshop-resources/ol3/ol.js" charset="UTF-8"></script>
+  <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+  <div tabindex="2" id="map" class="map"></div>
+  <div>hello, openlayershello, openlayershello, openlayershello, openlayershello,
+     openlayershello, openlayershello, openlayershello, openlayershello, openlayershello,
+      openlayershello, openlayershello, openlayershello, 
+      hello, openlayershello, openlayershello, openlayershello, openlayershello,
+     openlayershello, openlayershello, openlayershello, openlayershello, openlayershello,
+      openlayershello, openlayershello, openlayershello, 
+    openlayershello, openlayershello, openlayershello, openlayershello, openlayers
+    openlayershello, openlayershello, openlayershello, openlayershello, openlayers
+    hello, openlayershello, openlayershello, openlayershello, openlayershello,
+     openlayershello, openlayershello, openlayershello, openlayershello, openlayershello,
+      openlayershello, openlayershello, openlayershello, 
+      hello, openlayershello, openlayershello, openlayershello, openlayershello,
+     openlayershello, openlayershello, openlayershello, openlayershello, openlayershello,
+      openlayershello, openlayershello, openlayershello, 
+    openlayershello, openlayershello, openlayershello, openlayershello, openlayers
+    openlayershello, openlayershello, openlayershello, openlayershello, openlayers
+    hello, openlayershello, openlayershello, openlayershello, openlayershello,
+     openlayershello, openlayershello, openlayershello, openlayershello, openlayershello,
+      openlayershello, openlayershello, openlayershello, 
+      hello, openlayershello, openlayershello, openlayershello, openlayershello,
+     openlayershello, openlayershello, openlayershello, openlayershello, openlayershello,
+      openlayershello, openlayershello, openlayershello, 
+    openlayershello, openlayershello, openlayershello, openlayershello, openlayers
+    openlayershello, openlayershello, openlayershello, openlayershello, openlayers
+    hello, openlayershello, openlayershello, openlayershello, openlayershello,
+     openlayershello, openlayershello, openlayershello, openlayershello, openlayershello,
+      openlayershello, openlayershello, openlayershello, 
+      hello, openlayershello, openlayershello, openlayershello, openlayershello,
+     openlayershello, openlayershello, openlayershello, openlayershello, openlayershello,
+      openlayershello, openlayershello, openlayershello, 
+    openlayershello, openlayershello, openlayershello, openlayershello, openlayers
+    openlayershello, openlayershello, openlayershello, openlayershello, openlayershello, openlayershello, openlayershello, openlayershello, openlayershello,
+    openlayershello, openlayershello, openlayershello, openlayershello, openlayershello,
+     openlayershello, openlayershello, openlayershello, 
+     hello, openlayershello, openlayershello, openlayershello, openlayershello,
+    openlayershello, openlayershello, openlayershello, openlayershello, openlayershello,
+     openlayershello, openlayershello, openlayershello, 
+   openlayershello, openlayershello, openlayershello, openlayershello, openlayers
+   openlayershello, openlayershello, openlayershello, openlayershello, openlayershello, openlayershello, openlayershello, openlayershello, openlayershello,
+   openlayershello, openlayershello, openlayershello, openlayershello, openlayershello,
+    openlayershello, openlayershello, openlayershello, 
+    hello, openlayershello, openlayershello, openlayershello, openlayershello,
+   openlayershello, openlayershello, openlayershello, openlayershello, openlayershello,
+    openlayershello, openlayershello, openlayershello, 
+  openlayershello, openlayershello, openlayershello, openlayershello, openlayers
+  openlayershello, openlayershello, openlayershello, openlayershello, openlayers
+  </div>
+
+   <script>
+     let map = new ol.Map({
+      //  interactions:ol.interaction.defaults({//
+      //   onFocusOnly: true //默认值为false  默认的交互只有在获取焦点后才会生效
+      //  }),
+       layers: [
+         new ol.layer.Tile({
+           source: new ol.source.BingMaps({
+             key:'ApyHk8XaCA_S37ORdbraqRQItI-aGnJ84OwkjefzGVBsfjA4Dbq3cUTmRs1gLQCV',
+            //  imagerySet: 'Aerial'
+           })
+         })
+       ],
+       view: new ol.View({
+         center:ol.proj.fromLonLat([108, 32]),
+        //  projection: 'EPSG: 4326',
+         zoom: 4
+       }),
+       target:'map'
+     })
+    //  地图移动时间
+    map.on('moveend', function(){
+      console.log(map.getView().getZoom())
+    })
+   </script>
+
+
+   <!-- 此操作在写此demo 时没有实现, 猜测为可能不支持此 -->
+</body>
+</html>
