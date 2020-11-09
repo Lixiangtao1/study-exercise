@@ -13,6 +13,7 @@
   <div style="background-color: #999;"><span>当前绘制线的坐标：</span><span id='points'></span></div>
   <input type="button" value="取消绘制" onclick="closeDraw()" />
   <input type="button" value="添加绘制" onclick="addDraw()" />
+  <input type="button" value="绘制多边形" onclick="drawMoreLine()" />
   <script>
     var map = new ol.Map({
       layers:[
@@ -45,7 +46,7 @@
       source: saveLayer.getSource(),
       style: new ol.style.Style({
         stroke: new ol.style.Stroke({
-          color: '#009933',
+          color: 'red',
           size: 10
         })
       }),
@@ -68,6 +69,32 @@
     }
     function addDraw() {
       map.addInteraction(drawLine)//将绘制layer添加到地图
+    }
+    // 创建绘制多边形的layer
+    var drawMoreLayer = new ol.layer.Vector({
+      source: new ol.source.Vector({
+        style: new ol.style.Style({
+          image: new ol.style.Stroke({
+            color:'yello',
+            size: 1
+          })
+        })
+      })
+    })
+    map.addLayer(drawMoreLayer)
+    // 添加绘制事件
+    let drawMore = new ol.interaction.Draw({
+      type:'Polygon',
+      source: drawMoreLayer.getSource(),
+      // style: new ol.style.Style({
+      //   image: new ol.style.Stroke({
+      //     // color:'red',
+      //     size: 1
+      //   })
+      // })
+    })
+    function drawMoreLine() {
+      map.addInteraction(drawMore)
     }
   </script>
 </body>

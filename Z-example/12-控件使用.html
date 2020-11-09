@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>控件使用</title>
+  <link rel="stylesheet" href="./../010-openlayers/workshop-resources/ol3/ol.css" type="text/css">
+  <script type="text/javascript" src="./../010-openlayers/workshop-resources/ol3/ol.js" charset="UTF-8"></script>
+  <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+  <!-- OpenLayers 3目前内置的地图控件类都在包ol.control下面，依次有
+    ol.control.Attribution: 右下角的地图信息控件
+    ol.control.FullScreen: 全屏控件
+    ol.control.MousePosition: 鼠标位置控件
+    ol.control.OverviewMap: 鸟瞰图控件
+    ol.control.Rotate: 指北针控件
+    ol.control.ScaleLine: 比例尺控件
+    ol.control.Zoom: 缩放按钮控件
+    ol.control.ZoomSlider: 缩放滚动条控件
+    ol.control.ZoomToExtent: 放大到设定区域控件  
+  -->
+  <div id="map"></div>
+  <script>
+    var map = new ol.Map({
+      // controls: ol.control.defaults({
+      //   attribution: false,
+      //   rotate: false,
+      //   zoom: false
+      // }),
+      // 在默认控件的基础上，再加上其他内置的控件
+      controls: ol.control.defaults().extend([
+        // new ol.control.FullScreen(),
+        // new ol.control.MousePosition(),鼠标位置控件
+        new ol.control.OverviewMap(),
+        // new ol.control.ScaleLine(),
+        // new ol.control.ZoomSlider(),
+        // new ol.control.ZoomToExtent()
+      ]),
+      layers:[
+        new ol.layer.Tile({
+          source: new ol.source.OSM()
+        })
+      ],
+      view: new ol.View({
+        center: ol.proj.transform([108,34],"EPSG:4326","EPSG:3857"),
+        zoom: 8
+      }),
+      target: 'map'
+    })
+  </script>
+</body>
+</html>
