@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>自定义事件</title>
+  <link rel="stylesheet" href="./../010-openlayers/workshop-resources/ol3/ol.css" type="text/css">
+  <script type="text/javascript" src="./../010-openlayers/workshop-resources/ol3/ol.js" charset="UTF-8"></script>
+  <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+  <div id="map" style="width: 100%;height: 100%;"></div>
+  <input type="button" value="取消选中" onclick="unSelect()" />
+  <script>
+    // 在地图上添加圆
+    var layer2 = new ol.layer.Vector({
+      source: new ol.source.Vector(),
+      style: new ol.style.Style({
+        image: new ol.style.Circle({
+          radius: 20,
+          fill: new ol.style.Fill({
+            color: 'red'
+          })
+        })
+      })
+    })
+
+    // 在地图上添加一个五角星
+    var layer3 = new ol.layer.Vector({
+      source: new ol.source.Vector(),
+      style: new ol.style.Style({
+        image: new ol.style.RegularShape({
+          points: 5,
+          radius1: 20,
+          radius2: 10,
+          fill: new ol.style.Fill({
+            color: 'red'
+          }) 
+        })
+      })
+    })
+    // 创建地图,添加Vector
+    var map = new ol.Map({
+      interactions: ol.interaction.defaults({// 不设置的情况下，默认会设置为ol.interaction.defaults()
+        // 将zoom开关设置为false
+        // doubleClickZoom: false,
+        // mouseWheelZoom: false,
+        // shiftDragZoom: false,
+        // pinchZoom:false,
+        // // 设置地图不能旋转
+        // altShiftDragRotate:false,
+        // pinchRotate:false
+      }),  
+      // 交互方式归纳为3类
+      layers: [
+        new ol.layer.Tile({
+          source: new ol.source.OSM()
+        }),
+        layer2,layer3
+      ],
+      view: new ol.View({
+        center: ol.proj.transform([108.06, 34.05], 'EPSG:4326', 'EPSG:3857'),
+        zoom: 4
+      }),
+      target: 'map'
+    })
+    // 在地图上添加圆
+    var feature1 = new ol.Feature({
+      geometry: new ol.geom.Point(ol.proj.transform([108.06, 34.05], 'EPSG:4326', 'EPSG:3857'))
+    })
+
+    // 添加一个五角星
+    var feature2 = new ol.Feature({
+      geometry: new ol.geom.Point(ol.proj.transform([118.06, 34.05], 'EPSG:4326', 'EPSG:3857'))
+    })
+    // 不在为feature设置style
+    layer2.getSource().addFeature(feature1)
+    layer3.getSource().addFeature(feature2)
+
+    // // 添加一个用于选择Feature的交互方式
+    // map.addInteraction(new ol.interaction.Select({
+    //   condition: ol.events.condition.pointerMove,     // 唯一的不同之处，设置鼠标移到feature上就选取
+    //   // 设置选中后的style
+    //   style: new ol.style.Style({
+    //     image: new ol.style.Circle({
+    //       radius: 20,
+    //       fill: new ol.style.Fill({
+    //         color: 'blue'
+    //       })
+    //     })
+    //   }),
+    //   // 设置过滤条件,可以用feature来写过滤, 也可以用layer来写过滤
+    //   filter: function(feature, layer){
+    //     return layer === layer2
+    //   }
+    // }))
+
+
+
+    // 使用select类获取选中元素添加样式,（在地图上添加feature类，使用ol.interaction.Select()类添加交互效果{事件触发类型, 样式修改}）
+    // 还提供了地图上Feature选取的交互类： ol.interaction.Select
+    let moveClick = new ol.interaction.Select({
+      condition: ol.events.condition.singleclick,     // 唯一的不同之处，设置鼠标移到feature上就选取
+      // 设置选中后的style
+      style: new ol.style.Style({
+        image: new ol.style.Circle({
+          radius: 20,
+          fill: new ol.style.Fill({
+            color: 'blue'
+          })
+        })
+      })
+    })
+    map.addInteraction(moveClick)
+
+    // 取消选中
+    function unSelect(){
+      console.log('123')
+      moveClick.getFeatures().clear();
+      // 下面这样也是可以取消选中的，根据情况选择
+      // map.removeInteraction(clickSelect);
+    }
+
+
+    
+  </script>
+</body>
+</html>

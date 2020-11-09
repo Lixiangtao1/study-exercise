@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>绘图进阶</title>
+  <link rel="stylesheet" href="./../010-openlayers/workshop-resources/ol3/ol.css" type="text/css">
+  <script type="text/javascript" src="./../010-openlayers/workshop-resources/ol3/ol.js" charset="UTF-8"></script>
+  <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+  <div id="map"></div>
+  <div style="background-color: #999;"><span>当前绘制线的坐标：</span><span id='points'></span></div>
+  <input type="button" value="取消绘制" onclick="closeDraw()" />
+  <input type="button" value="添加绘制" onclick="addDraw()" />
+  <script>
+    var map = new ol.Map({
+      layers:[
+        new ol.layer.Tile({
+          source: new ol.source.OSM()
+        })
+      ],
+      view: new ol.View({
+        center: ol.proj.transform([108,34],"EPSG:4326","EPSG:3857"),
+        zoom: 8
+      }),
+      target: 'map'
+    })
+    // 创建一个绘图使用的layer
+    var saveLayer = new ol.layer.Vector({
+      source: new ol.source.Vector({
+        style: new ol.style.Style({
+          image: new ol.style.Stroke({
+            color: 'red',
+            size: 1
+          })
+        })
+      })
+    })
+    map.addLayer(saveLayer)
+
+    // 绘制事件
+    let drawLine = new ol.interaction.Draw({
+      type:'LineString',
+      source: saveLayer.getSource(),
+      style: new ol.style.Style({
+        stroke: new ol.style.Stroke({
+          color: '#009933',
+          size: 10
+        })
+      }),
+      maxPoints: 4 //限制不超过4个点
+    })
+
+    // 监听线绘制结束事件, 获取坐标
+    drawLine.on('drawend', function(event){
+      // event.feature 就是当前绘制完成的线的Feature
+      console.log(event.feature)
+      console.log(event.feature.getGeometry())
+      console.log(event.feature.getGeometry().getCoordinates())
+      document.getElementById('points').innerHTML = JSON.stringify(event.feature.getGeometry().getCoordinates());
+    })
+    map.addInteraction(drawLine)//将绘制layer添加到地图
+    
+    function closeDraw() {//取消绘制
+      console.log('123')
+      map.removeInteraction(drawLine)
+    }
+    function addDraw() {
+      map.addInteraction(drawLine)//将绘制layer添加到地图
+    }
+  </script>
+</body>
+</html>
