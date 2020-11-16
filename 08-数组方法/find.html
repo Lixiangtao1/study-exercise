@@ -28,6 +28,37 @@
       }
     })
     console.log(temp)
+
+// 数组的扁平化思想
+    let arr2 = [1,2,[3,4,[5,6]]]
+    function flat(arr){
+      let result = []
+      arr.map(item => {
+        if (Array.isArray(item)) {
+          result = result.concat(flat(item))
+        }else{
+          result.push(item)
+        }
+      })
+      return result
+    }
+    console.log(flat(arr2))
+  // ES6方法
+  console.log(arr2.flat(Infinity))
+
+  
+
+
+  // 数组去重
+  // 1.filter遍历加 indexOf查询
+  let result = arr.map((item, index) => {
+    return arr.indexOf(item) == index
+  })
+  // 2.set (有局限性，引用数据类型时不能成功去重， 只能去除基本数据类型)
+  let result = [...new Set(arr)]
+  // 。。。。
+
+  
   </script>
 </body>
 </html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>练习</title>
+  <link rel="stylesheet" href="./../010-openlayers/workshop-resources/ol3/ol.css" type="text/css">
+  <script type="text/javascript" src="./../010-openlayers/workshop-resources/ol3/ol.js" charset="UTF-8"></script>
+  <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+  <div id="map" style="width: 100%;height: 100%;"></div>
+  <script>
+    var map = new ol.Map({
+      // controls: ol.control.defaults({
+      //   attribution: false,
+      //   rotate: false,
+      //   zoom: false
+      // }),
+      // 在默认控件的基础上，再加上其他内置的控件
+      controls: ol.control.defaults().extend([
+        // new ol.control.FullScreen(),
+        // new ol.control.MousePosition(),鼠标位置控件
+        new ol.control.OverviewMap(),
+        // new ol.control.ScaleLine(),
+        // new ol.control.ZoomSlider(),
+        // new ol.control.ZoomToExtent()
+      ]),
+      layers:[
+        // new ol.layer.Tile({
+        //   source: new ol.source.OSM()
+        // }),
+        //午夜蓝图
+        new ol.layer.Tile({
+          // title: "午夜蓝图", 
+          source: new ol.source.WMTS({
+            //1.午夜蓝图
+            url: 'http://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/{z}/{y}/{x}'
+
+            // 1..高德瓦片，最大支持放大到20级，字体比较大，但是最近好像又只能到19级了。
+            // url:'http://wprd0{1-4}.is.autonavi.com/appmaptile?x={x}&y={y}&z={z}&lang=zh_cn&size=1&scl=1&style=7'
+            // 2.高德瓦片，最大支持放大到20级，颜色偏灰绿色。
+            // url:'http://webst0{1-4}.is.autonavi.com/appmaptile?style=7&x={x}&y={y}&z={z}'
+            // 3.高德瓦片，最大支持放大到18级，最常用的样式。
+            // url:'http://webrd01.is.autonavi.com/appmaptile?x={x}&y={y}&z={z}&lang=zh_cn&size=1&scale=1&style=8'
+            // 4.谷歌地图瓦片，最大支持放大到22级，颜色偏绿色。
+            // url:'https://mt0.google.cn/vt/lyrs=m&hl=zh-CN&gl=cn&x={x}&y={y}&z={z}'
+
+            // url: 'http://[t0-t7].tianditu.gov.cn/img_c/wmts?tk=' + '64d5c109c32f5d142b72960fa27313d8'
+          })
+        })
+      ],
+      view: new ol.View({
+        center: ol.proj.transform([108,34],"EPSG:4326","EPSG:3857"),
+        zoom: 8
+      }),
+      target: 'map'
+    })
+
+    // 自定义OpenLayers的控件（自定义控件无非就是将某个类继承于ol.control.Control类,然后根据不同的需求重写父类的方法或者新增方法）
+
+    // 获取GraphView对象
+    // GraphViewControl.prototype.getGraphView = function() { return this._graphView; };
+    // var graphView = this._graphView = new ht.graph.GraphView();// 拓扑图组件
+    // var view = graphView.getView()
+    // console.log(view)
+    // debugger
+  </script>
+</body>
+</html>
