@@ -20,3 +20,5 @@ console.log(JSON.parse(JSON.stringify(aa)))
 //   console.log('test2')
 // }
 // test2()
+
+// const arrayBuffer = new Uint8Array()

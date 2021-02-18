@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="myDiv"><span></span></div>
+  <script>
+    const data = {} 
+    const element = document.getElementById('myDiv')
+    console.log(element)
+    data[element] = 'metadata';
+    console.log(data['[object HTMLDivElement]']) // "metadata"
+
+
+    // ES6 提供了Map数据结构，类似于对象也是键值对的集合， 但是键的范围不限于字符串,各种类型的值(包括对象)
+    // Object 结构提供了“字符串—值”的对应，Map 结构提供了“值—值”的对应，是一种更完善的 Hash 结构实现。如果你需要“键值对”的数据结构，Map 比 Object 更合适。
+  
+    const map = new Map([
+      ['name','张三'],
+      ['title', 'Author']
+    ])
+    console.log(map)
+
+    // Map 的键实际上是跟内存地址绑定的，只要内存地址不一样，就视为两个键
+
+    function filterType(val){
+			// const set = new Set([
+			// 	['1','张三'],
+			// 	['2','李四'],
+			// 	['3','王五']
+			// ])
+			// const map = new Map(set)
+			const map = new Map([
+				['1','张三'],
+				['2','李四'],
+				['3','王五'],
+			])
+			// map.set('1','张三')
+			// map.set('2','李四')
+			// map.set('3','王五')
+			return map.get(val)
+    }
+    
+    //1. map数据结构转换为数组, 最常用的方法就是使用扩展运算符[...map]
+    const myMap = new Map().set(true, 7).set({foo: 3}, ['abc']);
+    [...myMap]
+
+    // 2. 数组转化为Map, 将数组传入map构造函数,就可以转化为Map
+    new Map([
+      [true, 7],
+      [{foo: 3}, ['abc']]
+    ])
+    // Map {
+    //   true => 7,
+    //   Object {foo: 3} => ['abc']
+    // }
+
+
+  </script>
+</body>
+</html>

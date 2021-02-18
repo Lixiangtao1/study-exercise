@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>无缝轮播</title>
+	<!-- 运动 -->
+	<!-- 
+	voison：0.1 
+	1 2 3 4 5 6 1
+	1走到6再到1，这时如果没有1这张图就有一个1图闪现的过程，也就是说，用1图来掩盖图片的动画的重新开始
+	多添加一张图，运动六张图的距离
+	 -->
+	<style>
+		* {
+			margin:0 auto;
+		}
+		a {
+			text-decoration: none;
+			display: block;
+		}
+		ul {
+		
+			list-style-type: none;
+		}
+		.banner-lb {
+			width: 310px;
+			border: 1px solid pink;
+			height: 193px;
+			margin:0 auto;	
+			overflow: hidden;
+		}
+		.banner-lb img {
+			width:310px;
+			height: 193px;
+		}
+		.banner-lb ul {
+			width: 700%;   /* 多添加一张图的长度，以避免出现闪图的bug*/
+			padding-left: 0px;
+			animation: lb 15s linear infinite;   /*循环播放 匀速*/
+		}
+		.banner-lb:hover ul {    /*
+			*/
+			animation-play-state: paused;
+		}
+		@keyframes lb {
+			form {
+				transform: translateX(0);
+			}
+			to {
+				transform: translateX(-1550px); /*只需要移动6张图的距离，这时显示的是最后一张图，而最后一张图和第一张图是一样的，造成一种循环的假象*/
+			}
+		}
+		.banner-lb ul li {
+			display: block;
+			float: left;
+		}
+
+
+	</style>
+</head>
+<body>
+	<div class="banner-lb">
+		<ul>
+			<li><a href=""><img src="./image/190.jpg" alt=""></a></li>
+			<li><a href=""><img src="./image/191.JPG" alt=""></a></li>
+			<li><a href=""><img src="./image/192.png" alt=""></a></li>
+			<li><a href=""><img src="./image/193.png" alt=""></a></li>
+			<li><a href=""><img src="./image/194.jpg" alt=""></a></li>
+			<li><a href=""><img src="./image/195.jpg" alt=""></a></li>
+			<!-- <li><a href=""><img src="./image/190.jpg" alt=""></a></li> -->
+		</ul>
+	</div>
+</body>
+</html>

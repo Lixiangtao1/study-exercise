@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .lists{
+      display: flex;
+      justify-content: center;
+      margin-top: 100px;
+    }
+    .box{
+      width: 200px;
+      height: 200px;
+      margin-right: 10px;
+      overflow: hidden; /*   *1.溢出隐藏, 2.清除浮动, 3.解决外边距塌陷*/
+
+    }
+    .box img{
+      width:100%;
+      height: 100%;
+      transition: 1s all;
+    }
+    .box:hover img{
+      /* transform: translateY(-6px); 上移*/ 
+      /* transform: scale(1.1); 缩放*/
+      opacity: 0.5; /* 蒙层 */
+    }
+  </style>
+</head>
+<body>
+  <div class="lists">
+    <div class="box">
+      <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1606909951179&di=9815b449417f7127cd35fb7817b3e6f3&imgtype=0&src=http%3A%2F%2Fa-ssl.duitang.com%2Fuploads%2Fitem%2F201509%2F21%2F20150921115800_KdTcs.jpeg" alt="">
+    </div>
+    <div class="box">
+      <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1606909951179&di=9815b449417f7127cd35fb7817b3e6f3&imgtype=0&src=http%3A%2F%2Fa-ssl.duitang.com%2Fuploads%2Fitem%2F201509%2F21%2F20150921115800_KdTcs.jpeg" alt="">
+    </div>
+  </div>
+</body>
+</html>

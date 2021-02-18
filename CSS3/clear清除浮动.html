@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    /* 当父元素没有设置高度,子元素有浮动  父元素会引起高度塌陷    (清除浮动解决) */
+    .box{
+      width: 500px;
+      /* height: 500px; */
+      background: skyblue;
+      overflow: hidden;
+    }
+    .box1, .box2{
+      width: 200px;
+      height: 200px;
+    }
+    .box1{
+      background: green;
+      float: left;
+    }
+    .box2{
+      background: pink;
+      float: left;
+    }
+    .clear:after{
+      /* 清除浮动的方法 */
+      content: '';
+      display: block;
+      clear: both;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <div class="box1"></div>
+    <div class="box2"></div>
+    <!-- <div class="clear"></div> -->
+  </div>
+</body>
+</html>

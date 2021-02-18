@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    div{
+      width: 200px;
+      height: 200px;
+      border: 1px solid #cccccc;
+    }
+    .box1{
+      position: relative;
+      background: aquamarine;
+      margin: 100px;
+    }
+    .box2 {
+      /* margin-top: 200px; */
+      background: green;
+      position:relative;
+      top: 100px;
+      /* animation:all .5s ease-in .1s; */
+    }
+    .box2:hover{
+      transition: ease-in-out 0.8s;
+      animation:mymove 5s infinite;
+      /* margin-left: 100px; */
+      /* animation:all .5s ease-in .1s; */
+    }
+    @keyframes mymove {
+      from { top: 0px;}
+      to {top: 200px;}
+    }
+  </style>
+
+  <script>
+    // 定位position:  relative, absolute, fixed (都是相对于某个基点的定位, 不同之处在于基点不同)
+    // static: static是position属性的默认值。如果省略position属性，浏览器就认为该元素是static定位
+
+
+    // 1. relative:(定位基点是本身) 表示相对于默认位置(即static时的位置)进行偏移, 即定位基点是元素的默认位置(必须搭配top、bottom、left、right这四个属性一起使用，用来指定偏移的方向和距离。)
+  
+    // 2. absolute: 表示相对于上级元素(一般是父元素(父元素为relative,否则往上一层去找去确定父元素), 否则定位的基点就会变成这个网页的根元素html)进行偏移, 即定位基点是父元素
+
+    // 3. fixed: 表示相对于浏览器窗口进行偏移, 即定位的基点是浏览器窗口,这会导致元素的位置不随页面滚动而变化,(如固定在网页上一样)
+  </script>
+</head>
+<body>
+  <div class="box1">
+    <div class="box2"></div>
+  </div>
+</body>
+</html>
